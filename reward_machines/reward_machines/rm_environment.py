@@ -49,8 +49,13 @@ class RewardMachineEnv(gym.Wrapper):
         # The observation space is a dictionary including the env features and a one-hot representation of the state in the reward machine
         self.observation_dict  = spaces.Dict({'features': env.observation_space, 'rm-state': spaces.Box(low=0, high=1, shape=(self.num_rm_states,), dtype=np.uint8)})
         flatdim = gym.spaces.flatdim(self.observation_dict)
-        s_low  = float(env.observation_space.low[0])
-        s_high = float(env.observation_space.high[0])
+        ob_shape = env.observation_space.shape
+        if len(ob_shape) == 3:
+            s_low  = float(env.observation_space.low[0][0][0])
+            s_high = float(env.observation_space.high[0][0][0])
+        else:
+            s_low  = float(env.observation_space.low[0])
+            s_high = float(env.observation_space.high[0])
         self.observation_space = spaces.Box(low=s_low, high=s_high, shape=(flatdim,), dtype=np.float32)
 
         # Computing one-hot encodings for the non-terminal RM states

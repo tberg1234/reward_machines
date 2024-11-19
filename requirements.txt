@@ -2,6 +2,22 @@ tensorflow-gpu==1.14.0
 gym==0.15.7
 protobuf==3.12.4
 -e git+https://github.com/openai/baselines.git@ea25b9e8b234e6ee1bca43083f8f3cf974143998#egg=baselines
+pillow==9.5.0
+torch==1.6.0
+boolean-py==3.8
+deepdish==0.3.6
+matplotlib==3.4.3
+pygame==2.3.0
+networkx==2.6.3
+pyyaml
+mujoco-py==2.1.2.14
+cython<3
+
+#needed to add the following to my bashrc:
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/<user>/.mujoco/mujoco210/bin
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/nvidia
+
+#
 
 #Additional dependencies in original requirements.txt:
 # absl-py==0.9.0

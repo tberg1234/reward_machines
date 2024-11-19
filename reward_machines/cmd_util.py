@@ -126,4 +126,7 @@ def common_arg_parser():
     parser.add_argument('--r_min', help="R-min reward used for training option policies in hrm", type=float, default=0.0)
     parser.add_argument('--r_max', help="R-max reward used for training option policies in hrm", type=float, default=1.0)
     parser.add_argument("--use_self_loops", help="Add option policies for self-loops in the RMs", action="store_true", default=False)
+    parser.add_argument("--load_path", help="Path to load trained model from", default=None, type=str)
+    parser.add_argument("--run_model", help="Run saved model (if one exists at load_path)", action="store_true", default=False)
+
     return parser

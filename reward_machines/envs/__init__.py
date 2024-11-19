@@ -1,5 +1,13 @@
 from gym.envs.registration import register
 
+#------------------------------------------ Boxman
+
+register(
+    id='Boxman-RM1-v0',
+    entry_point='envs.boxman.boxman_environment:MyBoxmanEnvRM1',
+    max_episode_steps=1000,
+)
+
 # ----------------------------------------- Half-Cheetah
 
 register(
@@ -7,13 +15,12 @@ register(
     entry_point='envs.mujoco_rm.half_cheetah_environment:MyHalfCheetahEnvRM1',
     max_episode_steps=1000,
 )
+
 register(
     id='Half-Cheetah-RM2-v0',
     entry_point='envs.mujoco_rm.half_cheetah_environment:MyHalfCheetahEnvRM2',
     max_episode_steps=1000,
 )
-
-
 
 # ----------------------------------------- WATER
 for i in range(11):

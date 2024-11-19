@@ -6,6 +6,7 @@ import gym
 from collections import defaultdict
 import tensorflow as tf
 import numpy as np
+import pickle
 
 from baselines.common.vec_env import VecFrameStack, VecNormalize, VecEnv
 from baselines.common.vec_env.vec_video_recorder import VecVideoRecorder
@@ -172,6 +173,10 @@ def get_learn_function(alg):
     return get_alg_module(alg).learn
 
 
+def get_run(alg):
+    return get_alg_module(alg).run
+
+
 def get_learn_function_defaults(alg, env_type):
     try:
         alg_defaults = get_alg_module(alg, 'defaults')
@@ -179,7 +184,6 @@ def get_learn_function_defaults(alg, env_type):
     except (ImportError, AttributeError):
         kwargs = {}
     return kwargs
-
 
 
 def parse_cmdline_kwargs(args):
@@ -203,13 +207,32 @@ def configure_logger(log_path, **kwargs):
     else:
         logger.configure(**kwargs)
 
+def play(model, env):
+    logger.log("Running trained model")
+    obs = env.reset()
 
-def main(args):
+    state = model.initial_state if hasattr(model, 'initial_state') else None
+    dones = np.zeros((1,))
+
+    episode_rew = np.zeros(env.num_envs) if isinstance(env, VecEnv) else np.zeros(1)
+    while True:
+        if state is not None:
+            actions, _, state, _ = model.step(obs,S=state, M=dones)
+        else:
+            actions, _, _, _ = model.step(obs)
+
+        obs, rew, done, _ = env.step(actions)
+        episode_rew += rew
+        env.render()
+        done_any = done.any() if isinstance(done, np.ndarray) else done
+        if done_any:
+            for i in np.nonzero(done)[0]:
+                print('episode_rew={}'.format(episode_rew[i]))
+                episode_rew[i] = 0
+
+
+def main(args, extra_args):
     # configure logger, disable logging in child MPI processes (with rank > 0)
-
-    arg_parser = common_arg_parser()
-    args, unknown_args = arg_parser.parse_known_args(args)
-    extra_args = parse_cmdline_kwargs(unknown_args)
 
     if MPI is None or MPI.COMM_WORLD.Get_rank() == 0:
         rank = 0
@@ -222,34 +245,39 @@ def main(args):
 
     if args.save_path is not None and rank == 0:
         save_path = osp.expanduser(args.save_path)
-        model.save(save_path)
+        with open(save_path + args.alg + '.pkl', 'wb') as f:
+            pickle.dump(model, f)
 
-    if args.play:
-        logger.log("Running trained model")
-        obs = env.reset()
-
-        state = model.initial_state if hasattr(model, 'initial_state') else None
-        dones = np.zeros((1,))
-
-        episode_rew = np.zeros(env.num_envs) if isinstance(env, VecEnv) else np.zeros(1)
-        while True:
-            if state is not None:
-                actions, _, state, _ = model.step(obs,S=state, M=dones)
-            else:
-                actions, _, _, _ = model.step(obs)
-
-            obs, rew, done, _ = env.step(actions)
-            episode_rew += rew
-            env.render()
-            done_any = done.any() if isinstance(done, np.ndarray) else done
-            if done_any:
-                for i in np.nonzero(done)[0]:
-                    print('episode_rew={}'.format(episode_rew[i]))
-                    episode_rew[i] = 0
+    if args.play: #FIXME: this doesn't work
+        play(model, env)
 
     env.close()
 
     return model
+
+def run_trained_model(args, extra_args):
+
+    env_type, env_id = get_env_type(args)
+    print('env_type: {}'.format(env_type))
+
+    env = build_env(args)
+
+    if args.load_path is not None:
+        load_path = osp.expanduser(args.load_path)
+        with open(load_path + args.alg + '.pkl', 'rb') as f:
+            Q = pickle.load(f)
+        
+        # Q = pickle.loads(load_path + args.alg + '.pkl') #np.load(load_path + args.alg + ".npy", allow_pickle=True).item()
+        print("running trained model")
+        run = get_run(args.alg)  # CURRENTLY ONLY IMPLEMNETED IN qlearning.py
+        trajectory = run(env, Q)
+        print("Done running model")
+        gif_file = load_path + args.alg + '_demo.gif'
+        trajectory[0].save(gif_file, save_all=True, append_images=trajectory[1:], optimize=False, duration=250, loop=0)          
+
+    else:
+        print("load path not provided, cannot load pretrained model to run")
+
 
 if __name__ == '__main__':
 
@@ -270,5 +298,12 @@ if __name__ == '__main__':
 
     import time
     t_init = time.time()
-    main(sys.argv)
+
+    arg_parser = common_arg_parser()
+    args, unknown_args = arg_parser.parse_known_args(sys.argv)
+    extra_args = parse_cmdline_kwargs(unknown_args)
+    if args.run_model:
+        run_trained_model(args, extra_args)
+    else:
+        main(args, extra_args)
     logger.log("Total time: " + str(time.time() - t_init) + " seconds")
