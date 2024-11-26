@@ -1,0 +1,6 @@
+0 # initial state
+[1] # terminal state
+(0,0,'!b&!e',ConstantRewardFunction(0))
+(0,1,'b&!e',ConstantRewardFunction(1)) #F b & G ! e
+conda activate reward-machines-repoman
+python run.py --env=Boxman-RM1-v0 --num_timesteps=1e5 --gamma=0.9 --alg=qlearning --save_path=~/rm_models/

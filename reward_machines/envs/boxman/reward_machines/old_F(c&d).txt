@@ -1,0 +1,4 @@
+0 # initial state
+[1] # terminal state
+(0,0,'!c&!d',ConstantRewardFunction(0))
+(0,1,'c&d',ConstantRewardFunction(1)) # old F (c & d)
