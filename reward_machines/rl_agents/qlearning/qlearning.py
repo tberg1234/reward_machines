@@ -8,6 +8,7 @@ from PIL import Image
 import numpy as np
 
 MAX_STEPS=20
+SEPERATOR = "================================================================"
 
 def get_qmax(Q,s,actions,q_init):
     if s not in Q:
@@ -38,7 +39,13 @@ def run(env,
     trajectory = []
 
     for step in range(MAX_STEPS):
-        img = Image.fromarray(np.uint8(env.render(mode='rgb_img')))
+        try:
+            img = Image.fromarray(np.uint8(env.render(mode='rgb_img')))
+        except NotImplementedError:
+            img = env.show()
+            print(SEPERATOR)
+
+    
         trajectory.append(img)
 
         # Selecting and executing the action
@@ -49,7 +56,11 @@ def run(env,
         obs, reward, done, info = env.step(a)
 
         if done:
-            img = Image.fromarray(np.uint8(env.render(mode='rgb_img')))
+            try:
+                img = Image.fromarray(np.uint8(env.render(mode='rgb_img')))
+            except NotImplementedError:
+                img = env.show()
+                print(SEPERATOR)
             trajectory.append(img)
             return trajectory
 

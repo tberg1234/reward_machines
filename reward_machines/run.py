@@ -264,6 +264,7 @@ def run_trained_model(args, extra_args):
 
     if args.load_path is not None:
         load_path = osp.expanduser(args.load_path)
+        print("loading model")
         with open(load_path + args.alg + '.pkl', 'rb') as f:
             Q = pickle.load(f)
         
@@ -273,7 +274,14 @@ def run_trained_model(args, extra_args):
         trajectory = run(env, Q)
         print("Done running model")
         gif_file = load_path + args.alg + '_demo.gif'
-        trajectory[0].save(gif_file, save_all=True, append_images=trajectory[1:], optimize=False, duration=250, loop=0)          
+        try:
+            trajectory[0].save(gif_file, save_all=True, append_images=trajectory[1:], optimize=False, duration=250, loop=0)
+        except Exception as e:
+            if trajectory[0] is None:
+                print("No saved trajjectory, printed to terminal earlier")
+            else:
+                for t in trajectory:
+                    print(t)
 
     else:
         print("load path not provided, cannot load pretrained model to run")
