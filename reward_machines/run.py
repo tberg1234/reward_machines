@@ -169,8 +169,7 @@ def get_alg_module(alg, submodule=None):
     return alg_module
 
 
-def get_learn_function(alg):
-    return get_alg_module(alg).learn
+def get_learn_function(alg):    return get_alg_module(alg).learn
 
 
 def get_run(alg):

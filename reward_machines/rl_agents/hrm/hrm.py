@@ -122,3 +122,5 @@ def learn(env,
                 num_episodes += 1
                 break
             s = sn
+
+    return Q_controller
