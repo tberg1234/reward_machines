@@ -15,7 +15,7 @@ class BoxmanEnv(gym.Wrapper):
         player_starting_pos = (5,6)
         sprite_starting_pos = None
         tasks = ['blue', 'square']
-        env, collect_env, goals = create_env(tasks, negate=False, include_purple_square=False, goal_condition=None, shift_up=False, player_starting_pos=player_starting_pos, sprite_starting_pos=sprite_starting_pos)
+        env, collect_env, goals = create_env(tasks, negate=False, include_purple_square=True, goal_condition=None, shift_up=False, player_starting_pos=player_starting_pos, sprite_starting_pos=sprite_starting_pos)
         self.collect_env = collect_env
         self.collected = []
         self.goals = goals
@@ -53,5 +53,29 @@ class BoxmanEnv(gym.Wrapper):
 class MyBoxmanEnvRM1(RewardMachineEnv):
     def __init__(self):
         env = BoxmanEnv()
-        rm_files = ["./envs/boxman/reward_machines/t1.txt"]
+        rm_files = ["./envs/boxman/reward_machines/videogameworld1.txt"]
+        super().__init__(env, rm_files)
+
+class MyBoxmanEnvRM2(RewardMachineEnv):
+    def __init__(self):
+        env = BoxmanEnv()
+        rm_files = ["./envs/boxman/reward_machines/videogameworld2.txt"]
+        super().__init__(env, rm_files)
+
+class MyBoxmanEnvRM3(RewardMachineEnv):
+    def __init__(self):
+        env = BoxmanEnv()
+        rm_files = ["./envs/boxman/reward_machines/videogameworld3.txt"]
+        super().__init__(env, rm_files)
+
+class MyBoxmanEnvRM4(RewardMachineEnv):
+    def __init__(self):
+        env = BoxmanEnv()
+        rm_files = ["./envs/boxman/reward_machines/videogameworld4.txt"]
+        super().__init__(env, rm_files)
+
+class MyBoxmanEnvRM5(RewardMachineEnv):
+    def __init__(self):
+        env = BoxmanEnv()
+        rm_files = ["./envs/boxman/reward_machines/videogameworld5.txt"]
         super().__init__(env, rm_files)

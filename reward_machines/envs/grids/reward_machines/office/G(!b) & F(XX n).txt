@@ -1,0 +1,6 @@
+0 # initial state
+[2] # terminal state
+(0,0,'!n&!b',ConstantRewardFunction(0))
+(0,1,'n&!b',ConstantRewardFunction(0))
+(1,0, '!n',ConstantRewardFunction(0))
+(1,2,'n&!b',ConstantRewardFunction(1)) #'G(!b) & F(XX n)'

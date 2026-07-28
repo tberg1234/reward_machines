@@ -1,4 +1,13 @@
 0 # initial state
-[1] # terminal state
-(0,0,'!f',ConstantRewardFunction(0))
-(0,1,'f',ConstantRewardFunction(1))
+[3] # terminal state
+(0,0,'b',ConstantRewardFunction(0))
+(0,1,'(a|c|d|e|f|g|h|n)&!b',ConstantRewardFunction(0))
+(1,2,'!b',ConstantRewardFunction(0))
+(2,2,'!n&!b',ConstantRewardFunction(0))
+(2,3,'n&!b',ConstantRewardFunction(1))
+(1,5,'!(a|b|c|d|e|f|g|n)',ConstantRewardFunction(0))
+(5,5,'!(a|b|c|d|e|f|g|n)',ConstantRewardFunction(0))
+(5,3,'n&!b',ConstantRewardFunction(1))
+(0,4,'!(a|b|c|d|e|f|g|n)',ConstantRewardFunction(0))
+(4,4,'!(a|b|c|d|e|f|g|n)',ConstantRewardFunction(0))
+(4,2,'!b',ConstantRewardFunction(0)) #G(!b) & F(XXn)

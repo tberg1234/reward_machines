@@ -1,0 +1,5 @@
+0 # initial state
+[1] # terminal state
+(0,0,'!(b&e|c&e)',ConstantRewardFunction(0))
+(0,1,'b&e|c&e',ConstantRewardFunction(1))
+(1,1,'b&e|c&e',ConstantRewardFunction(1))# F G ((blue | purple) & square)

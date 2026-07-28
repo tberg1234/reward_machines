@@ -3,8 +3,32 @@ from gym.envs.registration import register
 #------------------------------------------ Boxman
 
 register(
-    id='Boxman-RM1-v0',
+    id='Boxman-BlueSquareTask-v0',
     entry_point='envs.boxman.boxman_environment:MyBoxmanEnvRM1',
+    max_episode_steps=1000,
+)
+
+register(
+    id='Boxman-PurpleCircleTask-v0',
+    entry_point='envs.boxman.boxman_environment:MyBoxmanEnvRM2',
+    max_episode_steps=1000,
+)
+
+register(
+    id='Boxman-BlueNotSquareTask-v0',
+    entry_point='envs.boxman.boxman_environment:MyBoxmanEnvRM3',
+    max_episode_steps=1000,
+)
+
+register(
+    id='Boxman-BlueSquareAndPurpleCircleTask-v0',
+    entry_point='envs.boxman.boxman_environment:MyBoxmanEnvRM4',
+    max_episode_steps=1000,
+)
+
+register(
+    id='Boxman-BlueOrPurpleAndSquareTask-v0',
+    entry_point='envs.boxman.boxman_environment:MyBoxmanEnvRM5',
     max_episode_steps=1000,
 )
 
@@ -43,13 +67,19 @@ for i in range(11):
 
 # ----------------------------------------- OFFICE
 register(
-    id='Office-v0',
+    id='OfficeGetCoffeeTask-v0',
     entry_point='envs.grids.grid_environment:OfficeRMEnv',
     max_episode_steps=1000
 )
 
 register(
-    id='Office-single-v0',
+    id='OfficeGoAandDTask-v0',
+    entry_point='envs.grids.grid_environment:OfficeRM2Env',
+    max_episode_steps=1000
+)
+
+register(
+    id='OfficeAvoidBAndIn2TasksGetDecorator-v0',
     entry_point='envs.grids.grid_environment:OfficeRM3Env',
     max_episode_steps=1000
 )

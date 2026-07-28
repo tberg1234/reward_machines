@@ -1,3 +1,4 @@
+import os
 import sys
 import re
 import multiprocessing
@@ -169,7 +170,8 @@ def get_alg_module(alg, submodule=None):
     return alg_module
 
 
-def get_learn_function(alg):    return get_alg_module(alg).learn
+def get_learn_function(alg):    
+    return get_alg_module(alg).learn
 
 
 def get_run(alg):
@@ -240,12 +242,23 @@ def main(args, extra_args):
         rank = MPI.COMM_WORLD.Get_rank()
         configure_logger(args.log_path, format_strs=[])
 
+    start_time = time.clock()
+
     model, env = train(args, extra_args)
+
+    end_time = time.clock()
+    training_time = end_time-start_time
+    print(f"time to train RM: {training_time}")
 
     if args.save_path is not None and rank == 0:
         save_path = osp.expanduser(args.save_path)
+        os.makedirs(save_path, exist_ok=True)
         with open(save_path + args.alg + '.pkl', 'wb') as f:
             pickle.dump(model, f)
+        f = open(save_path + 'time_to_train_rm' + '.txt', "w")
+        f.write(str(training_time))
+        f.close()
+
 
     if args.play: #FIXME: this doesn't work
         play(model, env)
@@ -269,7 +282,7 @@ def run_trained_model(args, extra_args):
         
         # Q = pickle.loads(load_path + args.alg + '.pkl') #np.load(load_path + args.alg + ".npy", allow_pickle=True).item()
         print("running trained model")
-        run = get_run(args.alg)  # CURRENTLY ONLY IMPLEMNETED IN qlearning.py
+        run = get_run(args.alg)  # CURRENTLY ONLY IMPLEMNETED IN qlearning.py and hrm.py
         trajectory = run(env, Q)
         print("Done running model")
         gif_file = load_path + args.alg + '_demo.gif'

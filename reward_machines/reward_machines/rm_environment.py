@@ -95,10 +95,10 @@ class RewardMachineEnv(gym.Wrapper):
 
         # returning the result of this action
         done = rm_done or env_done
-        if rm_done:
-            print("RM DONE")
-        else:
-            print("ENV DONE")
+        # if rm_done:
+        #     print("RM DONE")
+        # else:
+        #     print("ENV DONE")
         rm_obs = self.get_observation(next_obs, self.current_rm_id, self.current_u_id, done)
 
         return rm_obs, rm_rew, done, info
@@ -258,8 +258,13 @@ class HierarchicalRMWrapper(gym.Wrapper):
         env_obs_space = env.observation_dict['features']
         self.option_observation_dict = spaces.Dict({'features': env_obs_space, 'option': spaces.Box(low=0, high=1, shape=(self.num_options,), dtype=np.uint8)})
         flatdim = gym.spaces.flatdim(self.option_observation_dict)
-        s_low  = float(env_obs_space.low[0])
-        s_high = float(env_obs_space.high[0])
+        ob_shape = env.observation_space.shape
+        if len(ob_shape) == 3:
+            s_low  = float(env.observation_space.low[0][0][0])
+            s_high = float(env.observation_space.high[0][0][0])
+        else:
+            s_low  = float(env.observation_space.low[0])
+            s_high = float(env.observation_space.high[0])
         self.option_observation_space = spaces.Box(low=s_low, high=s_high, shape=(flatdim,), dtype=np.float32)
         self.option_action_space = env.action_space
         self.controller_observation_space = env.observation_space

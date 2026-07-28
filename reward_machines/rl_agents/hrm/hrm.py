@@ -4,6 +4,11 @@ Q-Learning based method
 
 import random
 from baselines import logger
+from PIL import Image
+import numpy as np
+
+MAX_STEPS=20
+SEPERATOR = "================================================================"
 
 def add_state_if_needed(Q,s,actions,q_init):
     if s not in Q:
@@ -14,9 +19,57 @@ def get_qmax(Q,s,actions,q_init):
     return max(Q[s].values())
 
 def get_best_action(Q,s,actions,q_init):
+    # print(Q)
     qmax = get_qmax(Q,s,actions,q_init)
     best = [a for a in actions if Q[s][a] == qmax]
     return random.choice(best)
+
+def run(env,
+        Q,
+        q_init=2.0):
+    """
+    Parameters
+    -------
+    env: gym.Env
+        environment to train on
+    Q: trained model
+    q_init: float
+        initial q-value for unseen states
+    """
+    actions = list(range(env.action_space.n))
+    s = tuple(env.reset())
+    trajectory = []
+
+    for step in range(MAX_STEPS):
+        try:
+            img = Image.fromarray(np.uint8(env.render(mode='rgb_img')))
+        except NotImplementedError:
+            img = env.show()
+            print(SEPERATOR)
+
+    
+        trajectory.append(img)
+
+        # Selecting and executing the action
+        a = get_best_action(Q,s,actions,q_init)
+        # sn, r, done, info = env.step(a)
+
+        # action = select_action(policy, goals, obs)
+        obs, reward, done, info = env.step(a)
+
+        if done:
+            try:
+                img = Image.fromarray(np.uint8(env.render(mode='rgb_img')))
+            except NotImplementedError:
+                img = env.show()
+                print(SEPERATOR)
+            trajectory.append(img)
+            return trajectory
+
+        s = tuple(obs)
+        step+=1
+    
+    return trajectory
 
 def learn(env,
           network=None,
@@ -80,6 +133,8 @@ def learn(env,
                 option_id   = random.choice(valid_options) if random.random() < epsilon else get_best_action(Q_controller,s,valid_options,q_init)
                 option_rews = []
 
+            # print(option_id)
+
             # Selecting and executing an action
             a = random.choice(actions) if random.random() < epsilon else get_best_action(Q_options,tuple(env.get_option_observation(option_id)),actions,q_init)
             sn, r, done, info = env.step(a)
@@ -123,4 +178,4 @@ def learn(env,
                 break
             s = sn
 
-    return Q_controller
+    return Q_options

@@ -1,0 +1,7 @@
+0 # initial state
+[3] # terminal state
+(0,0,'!a&!f',ConstantRewardFunction(0))
+(0,1,'a&!f',ConstantRewardFunction(0))
+(0,2,'!a&f',ConstantRewardFunction(0))
+(1,3,'!a&f',ConstantRewardFunction(1))
+(2,3,'a&!f',ConstantRewardFunction(1)) #(G ( F a )) & (G ( F ( f )))
