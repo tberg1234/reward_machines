@@ -178,6 +178,38 @@ def get_run(alg):
     return get_alg_module(alg).run
 
 
+def generate_demo_gif(env, model, alg, gif_path):
+    """Generate a demo GIF by running the trained model and saving the trajectory.
+
+    Args:
+        env: The environment to run the model in
+        model: The trained model (Q-table or similar)
+        alg: Algorithm name (e.g., 'qlearning', 'hrm')
+        gif_path: Full path to save the GIF file
+
+    Returns:
+        True if GIF was saved successfully, False otherwise
+    """
+    print("Generating demo GIF...")
+    run_func = get_run(alg)
+    trajectory = run_func(env, model)
+    print("Done running model")
+
+    try:
+        if trajectory and trajectory[0] is not None:
+            trajectory[0].save(gif_path, save_all=True, append_images=trajectory[1:], optimize=False, duration=250, loop=0)
+            print(f"Demo GIF saved to {gif_path}")
+            return True
+        else:
+            print("No saved trajectory, printed to terminal earlier")
+            return False
+    except Exception as e:
+        print(f"Could not save GIF: {e}")
+        for t in trajectory:
+            print(t)
+        return False
+
+
 def get_learn_function_defaults(alg, env_type):
     try:
         alg_defaults = get_alg_module(alg, 'defaults')
@@ -259,6 +291,11 @@ def main(args, extra_args):
         f.write(str(training_time))
         f.close()
 
+        # Generate demo GIF after training
+        demo_env = build_env(args)
+        gif_path = save_path + args.alg + '_demo.gif'
+        generate_demo_gif(demo_env, model, args.alg, gif_path)
+        demo_env.close()
 
     if args.play: #FIXME: this doesn't work
         play(model, env)
@@ -278,23 +315,10 @@ def run_trained_model(args, extra_args):
         load_path = osp.expanduser(args.load_path)
         print("loading model")
         with open(load_path + args.alg + '.pkl', 'rb') as f:
-            Q = pickle.load(f)
-        
-        # Q = pickle.loads(load_path + args.alg + '.pkl') #np.load(load_path + args.alg + ".npy", allow_pickle=True).item()
-        print("running trained model")
-        run = get_run(args.alg)  # CURRENTLY ONLY IMPLEMNETED IN qlearning.py and hrm.py
-        trajectory = run(env, Q)
-        print("Done running model")
-        gif_file = load_path + args.alg + '_demo.gif'
-        try:
-            trajectory[0].save(gif_file, save_all=True, append_images=trajectory[1:], optimize=False, duration=250, loop=0)
-        except Exception as e:
-            if trajectory[0] is None:
-                print("No saved trajjectory, printed to terminal earlier")
-            else:
-                for t in trajectory:
-                    print(t)
+            model = pickle.load(f)
 
+        gif_path = load_path + args.alg + '_demo.gif'
+        generate_demo_gif(env, model, args.alg, gif_path)
     else:
         print("load path not provided, cannot load pretrained model to run")
 

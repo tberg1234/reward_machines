@@ -1,0 +1,7 @@
+0 # initial state
+[-1] # terminal state
+(0,0,'!(c&d)&!b&!a&!e',ConstantRewardFunction(0))
+(0,1,'c&d&!b&!a&!e',ConstantRewardFunction(1))
+(0,-1,'b|a|e',ConstantRewardFunction(-1))
+(1,1,'True',ConstantRewardFunction(0))
+(-1,-1,'True',ConstantRewardFunction(0)) # F(c&d) & G!(b|a|e)

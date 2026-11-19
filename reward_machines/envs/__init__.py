@@ -32,6 +32,36 @@ register(
     max_episode_steps=1000,
 )
 
+register(
+    id='Boxman-BlueSquareSafe-v0',
+    entry_point='envs.boxman.boxman_environment:MyBoxmanEnvRM6',
+    max_episode_steps=1000,
+)
+
+register(
+    id='Boxman-PurpleCircleSafe-v0',
+    entry_point='envs.boxman.boxman_environment:MyBoxmanEnvRM7',
+    max_episode_steps=1000,
+)
+
+register(
+    id='Boxman-BlueSafe-v0',
+    entry_point='envs.boxman.boxman_environment:MyBoxmanEnvRM8',
+    max_episode_steps=1000,
+)
+
+register(
+    id='Boxman-PatrolBothAvoidWhite-v0',
+    entry_point='envs.boxman.boxman_environment:MyBoxmanEnvRM9',
+    max_episode_steps=1000,
+)
+
+register(
+    id='Boxman-StayBlueOrPurpleSquare-v0',
+    entry_point='envs.boxman.boxman_environment:MyBoxmanEnvRM10',
+    max_episode_steps=1000,
+)
+
 # ----------------------------------------- Half-Cheetah
 
 register(

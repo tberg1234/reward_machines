@@ -79,3 +79,38 @@ class MyBoxmanEnvRM5(RewardMachineEnv):
         env = BoxmanEnv()
         rm_files = ["./envs/boxman/reward_machines/videogameworld5.txt"]
         super().__init__(env, rm_files)
+
+class MyBoxmanEnvRM6(RewardMachineEnv):
+    """F(b&e) & G!(c|a|d) - Eventually blue AND square, always avoid purple/white/circle"""
+    def __init__(self):
+        env = BoxmanEnv()
+        rm_files = ["./envs/boxman/reward_machines/videogameworld6.txt"]
+        super().__init__(env, rm_files)
+
+class MyBoxmanEnvRM7(RewardMachineEnv):
+    """F(c&d) & G!(b|a|e) - Eventually purple AND circle, always avoid blue/white/square"""
+    def __init__(self):
+        env = BoxmanEnv()
+        rm_files = ["./envs/boxman/reward_machines/videogameworld7.txt"]
+        super().__init__(env, rm_files)
+
+class MyBoxmanEnvRM8(RewardMachineEnv):
+    """F(b) & G!(c|a|e) - Eventually blue, always avoid purple/white/square"""
+    def __init__(self):
+        env = BoxmanEnv()
+        rm_files = ["./envs/boxman/reward_machines/videogameworld8.txt"]
+        super().__init__(env, rm_files)
+
+class MyBoxmanEnvRM9(RewardMachineEnv):
+    """G(F(b&e)) & G(F(c&d)) & G!a - Patrol both, always avoid white"""
+    def __init__(self):
+        env = BoxmanEnv()
+        rm_files = ["./envs/boxman/reward_machines/videogameworld9.txt"]
+        super().__init__(env, rm_files)
+
+class MyBoxmanEnvRM10(RewardMachineEnv):
+    """F(G((b|c)&e)) & G!(a|d) - Eventually always (blue OR purple) AND square, avoid white/circle"""
+    def __init__(self):
+        env = BoxmanEnv()
+        rm_files = ["./envs/boxman/reward_machines/videogameworld10.txt"]
+        super().__init__(env, rm_files)
